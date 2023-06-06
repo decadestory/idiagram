@@ -1,0 +1,51 @@
+---
+toc:
+  depth_from: 1
+  depth_to: 6
+---
+
+# Centos7 yum安装mysql8 （最简单方式）
+
+## 一、添加mysql8源
+```shell
+rpm -Uvh https://dev.mysql.com/get/mysql80-community-release-el7-7.noarch.rpm
+```
+
+## 二、安装mysql
+```shell
+yum install mysql-community-server
+```
+
+## 三、启动
+```shell
+ systemctl start mysqld    
+```
+
+## 四、查看初始密码
+```shell
+grep 'temporary password' /var/log/mysqld.log
+```
+
+## 五、登录并修改root密码
+```sql
+mysql -uroot -p
+-- 赋值上面初始密码填上
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
+```
+
+## 六、创建新用户 并 赋权限 开远程访问
+```sql
+create user test@'%' identified by 'Smartee@2004';
+grant all privileges on *.* to test@'%' with grant option;
+flush privileges;
+```
+
+## 七、防火墙开3306端口
+
+```shell
+systemctl start firewalld
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
+firewall-cmd --reload
+```
+
+## 八、简单吧，赶紧去连吧
