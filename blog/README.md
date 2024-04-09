@@ -4,48 +4,65 @@ toc:
   depth_to: 6
 ---
 
-# Centos7 yum安装mysql8 （最简单方式）
+# 仓库源等国内代理地址
 
-## 一、添加mysql8源
+## 一、GOPROXY
 ```shell
+# 七牛
+go env -w GOPROXY=https://goproxy.cn,direct
+# 阿里云
+go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
+# 官方
+go env -w  GOPROXY=https://goproxy.io,direct
+```
+
+## 二、NPM
+```shell
+npm config set registry https://registry.npm.taobao.org
+```
+
+## 三、Android SDK Manager
+```shell
+# 中国科学院开源协会镜像站
+http://mirrors.opencas.cn
+# 上海GDG镜像服务器
+http://sdk.gdgshanghai.com
+# 北京化工大学镜像服务器
+http://ubuntu.buct.edu.cn
+# 大连东软信息学院镜像服务器
+http://mirrors.neusoft.edu.cn
+# 腾讯Bugly
+http://android-mirror.bugly.qq.com
+```
+
+## 四、maven国内源
+```shell
+# 阿里云
+http://maven.aliyun.com/
+# 中央仓库
+https://repo1.maven.org/maven2/
+# 网易
+http://maven.netease.com/repository/public/
+# 华为云
+https://repo.huaweicloud.com/repository/maven/
+# tencent
+https://mirrors.cloud.tencent.com/repository/maven/
+```
+
+## 五、pip国内源
+```shell
+# 清华大学
+https://pypi.tuna.tsinghua.edu.cn/simple
+# 阿里云
+http://mirrors.aliyun.com/pypi/simple
+# 豆瓣
+http://pypi.douban.com/simple/
+```
+
+## 六、yum国内源
+```shell
+# 阿里的yum源
+curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+# mysql8
 rpm -Uvh https://dev.mysql.com/get/mysql80-community-release-el7-7.noarch.rpm
 ```
-
-## 二、安装mysql
-```shell
-yum install mysql-community-server
-```
-
-## 三、启动
-```shell
- systemctl start mysqld    
-```
-
-## 四、查看初始密码
-```shell
-grep 'temporary password' /var/log/mysqld.log
-```
-
-## 五、登录并修改root密码
-```sql
-mysql -uroot -p
--- 赋值上面初始密码填上
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
-```
-
-## 六、创建新用户 并 赋权限 开远程访问
-```sql
-create user test@'%' identified by 'Smartee@2004';
-grant all privileges on *.* to test@'%' with grant option;
-flush privileges;
-```
-
-## 七、防火墙开3306端口
-
-```shell
-systemctl start firewalld
-firewall-cmd --zone=public --add-port=3306/tcp --permanent
-firewall-cmd --reload
-```
-
-## 八、简单吧，赶紧去连吧
